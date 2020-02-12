@@ -63,7 +63,6 @@ class Sylvac:
 	# Close the connection	
 	def close(self):
 		self.ser.close()
-		print("Closing connection")	
 
 	# Print a list of available commands (intended for interactive use)
 	def help(self):
@@ -78,35 +77,45 @@ class Sylvac:
 			"RST\tRe-initialise instrument\n")
 		print(s)
 
-
-
 # The main() routine only runs if this script is run directly
 # If the module is imported in another script this will be ignored
 def main():
-	print("Running from main(), to quit enter 'q'")
-	
-	# Create a Sylvac object
+
+  # Create a Sylvac object
 	syl = Sylvac()
-	
-	# Start an infinite loop, exit only when user prompts
-	while True:
-		command = input('Enter command ("q" to quit, "h" for command list)->')
-		assert isinstance(command, str)
-		
-		# quit	
-		if (command=="q"):
-			break
-		
-		# Print a help screen
-		elif (command=="h"):
-			syl.help()
 
-		# Otherwise send the command and print the reponse
-		else:	
-			response = syl.send(command)
-			print(response)	
+  # If a single argument is passed, send just this as a command
+	if ( len(sys.argv) == 2):
+	  value = syl.send(sys.argv[1])
+	  print(value)
+
+  # If no arguments are passed enter interactive mode
+	elif (len(sys.argv)) == 1: 
+	  print("Interactive mode, to quit enter 'q'")
+	  
+	  # Start an infinite loop, exit only when user prompts
+	  while True:
+		  command = input('Enter command ("q" to quit, "h" for command list)->')
+		  assert isinstance(command, str)
+		  
+		  # quit	
+		  if (command=="q"):
+			  break
+		  
+		  # Print a help screen
+		  elif (command=="h"):
+			  syl.help()
+
+		  # Otherwise send the command and print the reponse
+		  else:	
+			  response = syl.send(command)
+			  print(response)
+			  
+	else:
+	  print("Expected either zero or one arguments")
+			  
+	# End of if statements		  	
 	syl.close()	
-
 
 # does not execute main if this module was imported
 if __name__ == "__main__": 
